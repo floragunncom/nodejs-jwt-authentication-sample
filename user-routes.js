@@ -54,13 +54,13 @@ app.post('/users', function(req, res) {
    return res.status(400).send("A user with that username already exists");
   }
 
-  var profile = _.pick(req.body, userScheme.type, 'password', 'extra');
+  var profile = _.pick(req.body, userScheme.type, 'password', 'roles');
   profile.id = _.max(users, 'id').id + 1;
 
   users.push(profile);
 
   res.status(201).send({
-    id_token: createToken(profile)
+    token: createToken(profile)
   });
 });
 
@@ -83,6 +83,6 @@ app.post('/sessions/create', function(req, res) {
   }
 
   res.status(201).send({
-    id_token: createToken(user)
+    token: createToken(user)
   });
 });
