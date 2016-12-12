@@ -42,6 +42,10 @@ function getUserScheme(req) {
   }
 }
 
+app.get('/users', function(req, res) {  
+  res.status(201).send(JSON.stringify(users, undefined, 2));
+});
+
 app.post('/users', function(req, res) {
   
   var userScheme = getUserScheme(req);  
