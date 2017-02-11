@@ -8,12 +8,12 @@ var app = module.exports = express.Router();
 // XXX: This should be a database of users :).
 var users = [{
   id: 1,
-  username: 'gonto',
-  password: 'gonto'
+  username: 'sampleuser',
+  password: 'sampleuser'
 }];
 
 function createToken(user) {
-  return jwt.sign(_.omit(user, 'password'), config.secret, { expiresIn: 60*60*5 });
+  return jwt.sign(_.omit(user, 'password'), config.secret);
 }
 
 function getUserScheme(req) {
@@ -77,7 +77,7 @@ app.post('/sessions/create', function(req, res) {
   }
 
   var user = _.find(users, userScheme.userSearch);
-  
+
   if (!user) {
     return res.status(401).send("The username or password don't match");
   }
@@ -85,6 +85,23 @@ app.post('/sessions/create', function(req, res) {
   if (user.password !== req.body.password) {
     return res.status(401).send("The username or password don't match");
   }
+
+  res.status(201).send({
+    token: createToken(user)
+  });
+});
+
+app.delete('/users', function (req, res) {
+
+  var username = req.body.username;
+
+  var user = _.find(users, {username: username});
+
+  if (!user) {
+    return res.status(401).send("User not found");
+  }
+
+  _.remove(users, {username: username});
 
   res.status(201).send({
     token: createToken(user)
