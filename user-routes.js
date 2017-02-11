@@ -93,17 +93,14 @@ app.post('/sessions/create', function(req, res) {
 
 app.delete('/users', function (req, res) {
 
-  var username = req.body.username;
+  var username = req.query.username;
+  var usersearch = {username: username};
 
   var user = _.find(users, {username: username});
-
   if (!user) {
-    return res.status(401).send("User not found");
+    return res.status(400).send("User not found");
   }
-
   _.remove(users, {username: username});
 
-  res.status(201).send({
-    token: createToken(user)
-  });
+  res.status(200).send();
 });
